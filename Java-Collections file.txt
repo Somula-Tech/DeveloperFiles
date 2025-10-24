@@ -1,0 +1,69 @@
+
+LIST
+
+| Method                 | Description                            | Example                       |
+| ---------------------- | -------------------------------------- | ----------------------------- |
+| `add(element)`         | Adds element to the end                | `list.add("Apple");`          |
+| `add(index, element)`  | Inserts element at a specific position | `list.add(1, "Banana");`      |
+| `get(index)`           | Returns the element at the given index | `list.get(0);`                |
+| `set(index, element)`  | Updates the element at the given index | `list.set(0, "Orange");`      |
+| `remove(index)`        | Removes the element at the given index | `list.remove(1);`             |
+| `remove(object)`       | Removes the first occurrence of object | `list.remove("Apple");`       |
+| `size()`               | Returns number of elements             | `list.size();`                |
+| `isEmpty()`            | Checks if list is empty                | `list.isEmpty();`             |
+| `contains(element)`    | Checks if list contains element        | `list.contains("Mango");`     |
+| `clear()`              | Removes all elements from list         | `list.clear();`               |
+| `indexOf(element)`     | Returns index of first occurrence      | `list.indexOf("Banana");`     |
+| `lastIndexOf(element)` | Index of last occurrence               | `list.lastIndexOf("Banana");` |
+| `toArray()`            | Converts list to array                 | `list.toArray();`             |
+
+
+SET:
+
+
+| Method                  | Description                                                | Example                                 |
+| ----------------------- | ---------------------------------------------------------- | --------------------------------------- |
+| `add(element)`          | Adds element to the set                                    | `set.add("Apple");`                     |
+| `addAll(collection)`    | Adds all elements from another collection                  | `set.addAll(list);`                     |
+| `remove(element)`       | Removes a specific element                                 | `set.remove("Banana");`                 |
+| `contains(element)`     | Checks if an element exists in the set                     | `set.contains("Apple");`                |
+| `isEmpty()`             | Checks if the set is empty                                 | `set.isEmpty();`                        |
+| `size()`                | Returns number of elements in the set                      | `set.size();`                           |
+| `clear()`               | Removes all elements                                       | `set.clear();`                          |
+| `iterator()`            | Returns an iterator to loop through the set                | `Iterator<String> it = set.iterator();` |
+| `retainAll(collection)` | Keeps only elements that exist in both sets (intersection) | `set1.retainAll(set2);`                 |
+| `removeAll(collection)` | Removes elements that exist in another collection          | `set1.removeAll(set2);`                 |
+
+
+Maps:
+
+| Method                    | Description                              | Example                          |
+| ------------------------- | ---------------------------------------- | -------------------------------- |
+| `put(key, value)`         | Adds or updates a key-value pair         | `map.put("Apple", 100);`         |
+| `get(key)`                | Retrieves the value for a key            | `map.get("Apple");`              |
+| `remove(key)`             | Removes the key-value pair               | `map.remove("Apple");`           |
+| `containsKey(key)`        | Checks if a key exists                   | `map.containsKey("Apple");`      |
+| `containsValue(value)`    | Checks if a value exists                 | `map.containsValue(100);`        |
+| `isEmpty()`               | Checks if the map is empty               | `map.isEmpty();`                 |
+| `size()`                  | Returns number of key-value pairs        | `map.size();`                    |
+| `clear()`                 | Removes all entries                      | `map.clear();`                   |
+| `keySet()`                | Returns a Set of all keys                | `map.keySet();`                  |
+| `values()`                | Returns a Collection of all values       | `map.values();`                  |
+| `entrySet()`              | Returns a Set of key-value pairs         | `map.entrySet();`                |
+| `putIfAbsent(key, value)` | Adds entry if key is not already present | `map.putIfAbsent("Apple", 200);` |
+
+
+
+Queue
+
+
+| Method           | Description                                           | Example             |
+| ---------------- | ----------------------------------------------------- | ------------------- |
+| `add(element)`   | Adds to the end of the queue                          | `queue.add("A");`   |
+| `offer(element)` | Adds to queue (returns false if full)                 | `queue.offer("B");` |
+| `peek()`         | Returns front without removing (null if empty)        | `queue.peek();`     |
+| `element()`      | Returns front (throws exception if empty)             | `queue.element();`  |
+| `poll()`         | Removes and returns front (null if empty)             | `queue.poll();`     |
+| `remove()`       | Removes and returns front (throws exception if empty) | `queue.remove();`   |
+| `isEmpty()`      | Checks if queue is empty                              | `queue.isEmpty();`  |
+| `size()`         | Returns number of elements in queue                   | `queue.size();`     |

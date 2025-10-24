@@ -1,0 +1,33 @@
+
+Docker Commands:
+docker build -t image-name . #this command is used to build the images
+
+docker	You’re using the Docker CLI (command-line tool).
+build	Tells Docker to build an image using instructions from a Dockerfile.
+-t user	Tags the image with a name (user). You can think of this like naming your image.
+.	The build context — the current directory (. means “here”). Docker will look for a Dockerfile in this folder and use its contents (including copied files like pom.xml, src/, etc.).
+
+docker images #to list the images
+
+docker build -t user:0.0.1.Release . #while building the images if we specify the version ok otherwise by default version of the image is latest
+
+docker run -p 8080:8080 container-name #to create the container-name
+
+ctrl+c #to stop the image-name
+
+docker ps #to check whether any containers are running
+
+docker run -p 8080:8080 -d image-name #to run the container in the background or in detach mode
+
+docker logs -f first four digit of container id #to see the logs of the container
+
+docker stop first four digit of container #to stop the container
+
+docker tag image-name reponame:image-version #to create repo image to docker hub
+
+docker push reponame:image-version #push the docker image to hub which you created the repo
+
+
+
+
+

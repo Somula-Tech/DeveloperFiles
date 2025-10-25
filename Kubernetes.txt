@@ -1,0 +1,68 @@
+
+Kubernetes commands
+
+#to setup minicube cluster in local
+choco install minikube
+
+minikube image ls
+
+minikube load image user:0.1.Release
+
+minikube start --driver=docker
+
+minikube service user-service(service name)
+
+minikube version
+
+minikube delete
+
+minikube start --driver=docker
+
+minikube status
+
+minikube stop
+
+minikube dashboard
+
+minikube ip
+
+
+#Kubernetes deployment commands
+
+A container orchestration system — it defines how containers are deployed, scaled, and managed across multiple machines (nodes).
+
+Kubectl get nodes
+
+kubectl apply -f deployment.yaml
+
+kubectl apply -f service.yaml
+
+kubectl get pods
+
+kubectl get svc(services)
+
+Controller(It will take care of how many pods to be run)
+Schedular(It will take care of pods need to run in which node and all)
+Kubelet(It will take care of Docker images)
+
+#Automation process of deployment using Kubernetes
+creating manifestfile 
+And add all the details of deployment.yaml and service.yaml and try to add the command kubectl apply -f deployment/service.yaml
+
+deployment.yaml(#this file will take care of how many pods need to be run and if pod crashes and immediately take the another pod up)
+Purpose:	Run & manage Pods 
+Description:	Defines the app’s container image, replicas, and update strategy
+“How to run my app.”
+
+service.yaml
+Purpose:	Expose Pods 
+Description:	Gives stable access to your app over the network
+“How to access my app.”
+
+Service Type		Accessible From				Used In						Typical Use Case
+ClusterIP			Inside cluster only			Local, internal services		Backend, DB
+NodePort			External (limited)			Local / Minikube					Development, testing
+LoadBalancer		Internet (public IP)	Cloud clusters				Production apps
+
+Minikube = Local practice version of Kubernetes
+Kubernetes = Real distributed system for production

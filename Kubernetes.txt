@@ -41,6 +41,12 @@ kubectl get pods
 
 kubectl get svc(services)
 
+kubectl get pods -n kube-system
+
+kubectl exec -it -n kube-system etcd-minikube -- sh
+
+
+
 Controller(It will take care of how many pods to be run)
 Schedular(It will take care of pods need to run in which node and all)
 Kubelet(It will take care of Docker images)
@@ -69,11 +75,12 @@ Kubernetes = Real distributed system for production
 
 🌐 Kubernetes Cluster
 │
-├── 🧠 Control Plane (Master Node)
-│   ├── kube-apiserver
-│   ├── etcd (key-value store)
-│   ├── kube-scheduler
-│   └── kube-controller-manager
+├── 🧠 Control Plane (Master Node)	#The Control Plane continuously watches what’s actually running in the cluster (via kubelets on each node) and compares it to what you want to run (stored in etcd).
+										If something doesn’t match — a controller takes action to fix it automatically.
+│   ├── kube-apiserver    # Handles all API requests
+│   ├── etcd (key-value store) #Stores cluster state
+│   ├── kube-scheduler		#Decides which node runs each pod
+│   └── kube-controller-manager	#Runs controllers to maintain desired state
 │
 └── 🧱 Worker Nodes (1..n)
     │
@@ -87,3 +94,194 @@ Kubernetes = Real distributed system for production
         │   └── e.g., Database Sidecar
         │
         └── Shared resources (IP, storage, namespace)
+		
+Cluster
+Controller
+Nodes
+Pods
+Containers
+
+🧩 Flow Example
+
+You create a Deployment → API Server stores it.
+
+Scheduler (on Control Plane) picks the best worker node.
+
+API Server notifies that node.
+
+Kubelet (on that node) receives the Pod spec.
+
+Kubelet pulls the Docker image and starts the container.
+
+Kube-proxy ensures the Pod is reachable through network rules.
+
+
+
+What is etcd Exactly?
+
+It’s a distributed key-value database.
+
+It stores all cluster data, including:
+
+Pods, Deployments, Services
+
+ConfigMaps, Secrets
+
+Node status, events, etc.
+
+🧠 Think of it as:
+
+“The brain’s memory” of Kubernetes —
+if it’s not in etcd, Kubernetes forgets it.
+
+
+How It Works in the Cluster
+Example Flow:
+
+You run:
+
+kubectl apply -f deployment.yaml
+
+
+The kube-apiserver receives that request.
+
+It stores your Deployment definition inside etcd.
+
+The controller-manager and scheduler read from etcd to decide what to do.
+
+They make sure your desired state (stored in etcd) matches the actual state (on nodes).
+
+Understanding Where etcd Data Lives
+
+In a Minikube or local Kubernetes setup, the etcd database is running as a pod inside the control plane (master node).
+That means it’s not a directory on your Windows filesystem — it’s inside a container running within Minikube.
+
+🧩 Step 1: Check if etcd is Running
+
+Run this command:
+
+kubectl get pods -n kube-system
+
+
+You’ll see something like:
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+etcd-minikube                           1/1     Running   0          2m
+kube-apiserver-minikube                 1/1     Running   0          2m
+kube-controller-manager-minikube        1/1     Running   0          2m
+kube-scheduler-minikube                 1/1     Running   0          2m
+...
+
+
+✅ Here, etcd-minikube is your etcd Pod.
+
+🧩 Step 2: Access the etcd Pod
+
+Run this:
+
+kubectl exec -it -n kube-system etcd-minikube -- sh
+
+
+This opens a shell inside the etcd container.
+
+🧩 Step 3: Locate the etcd Data Directory
+
+Once you’re inside, check the data directory:
+
+ls /var/lib/etcd
+
+
+You’ll see something like:
+
+member/
+snap/
+
+
+That’s where etcd stores:
+
+member/ → actual database files (WAL and snapshots)
+
+snap/ → snapshot backups of the key-value store
+
+🧩 Step 4: (Optional) Inspect Keys in etcd
+
+To see what’s inside etcd, you can run:
+
+ETCDCTL_API=3 etcdctl get / --prefix --keys-only \
+--cacert=/var/lib/minikube/certs/etcd/ca.crt \
+--cert=/var/lib/minikube/certs/etcd/server.crt \
+--key=/var/lib/minikube/certs/etcd/server.key
+
+
+That lists all keys (resource states) stored in etcd — basically the entire Kubernetes cluster state (Pods, Deployments, etc.).
+
+🧩 Step 5: Exit the Pod
+
+When done:
+
+exit
+
+🧭 Kubernetes Resource Hierarchy Diagram
+🌐 Cluster
+│
+├── 📦 Namespaces (logical isolation)
+│   │
+│   ├── ⚙️ Workloads
+│   │   ├── Deployment
+│   │   │   └── ReplicaSet
+│   │   │       └── Pod
+│   │   │           └── Container(s)
+│   │   │
+│   │   ├── StatefulSet
+│   │   │   └── Pod
+│   │   │       └── Container(s)
+│   │   │
+│   │   ├── DaemonSet
+│   │   │   └── Pod (1 per Node)
+│   │   │       └── Container(s)
+│   │   │
+│   │   ├── Job
+│   │   │   └── Pod (runs once)
+│   │   └── CronJob
+│   │       └── Job (runs on schedule)
+│   │           └── Pod
+│   │
+│   ├── 🌐 Networking
+│   │   ├── Service
+│   │   │   ├── ClusterIP
+│   │   │   ├── NodePort
+│   │   │   └── LoadBalancer
+│   │   │
+│   │   ├── Ingress (routes external HTTP/S)
+│   │   ├── NetworkPolicy (controls traffic)
+│   │   └── Endpoints / EndpointSlice
+│   │
+│   ├── 🔐 Config & Secrets
+│   │   ├── ConfigMap
+│   │   └── Secret
+│   │
+│   ├── 💾 Storage
+│   │   ├── PersistentVolumeClaim (PVC)
+│   │   │   └── PersistentVolume (PV)
+│   │   └── StorageClass
+│   │
+│   ├── 📊 Autoscaling
+│   │   ├── HorizontalPodAutoscaler
+│   │   └── PodDisruptionBudget
+│   │
+│   ├── 👤 Access Control
+│   │   ├── Role / RoleBinding (namespace level)
+│   │   ├── ClusterRole / ClusterRoleBinding (cluster level)
+│   │   └── ServiceAccount (for Pod auth)
+│   │
+│   └── 🧩 Custom Resources (CRDs)
+│       ├── ServiceMonitor (Prometheus)
+│       ├── Application (ArgoCD)
+│       └── Many others…
+│
+└── 🧠 Control Plane Components (Master)
+    ├── kube-apiserver (API gateway)
+    ├── etcd (cluster database)
+    ├── kube-scheduler (assigns Pods to Nodes)
+    ├── kube-controller-manager (manages controllers)
+    └── cloud-controller-manager (for cloud integration)

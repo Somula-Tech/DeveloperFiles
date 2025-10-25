@@ -28,7 +28,7 @@ minikube ip
 
 
 #Kubernetes deployment commands
-
+Port range: 30000–32767
 A container orchestration system — it defines how containers are deployed, scaled, and managed across multiple machines (nodes).
 
 Kubectl get nodes
@@ -66,3 +66,24 @@ LoadBalancer		Internet (public IP)	Cloud clusters				Production apps
 
 Minikube = Local practice version of Kubernetes
 Kubernetes = Real distributed system for production
+
+🌐 Kubernetes Cluster
+│
+├── 🧠 Control Plane (Master Node)
+│   ├── kube-apiserver
+│   ├── etcd (key-value store)
+│   ├── kube-scheduler
+│   └── kube-controller-manager
+│
+└── 🧱 Worker Nodes (1..n)
+    │
+    ├── kubelet (Node Agent)
+    ├── kube-proxy (Networking)
+    │
+    └── 🧩 Pods (1..n per Node)
+        │
+        ├── 🐳 Containers (your apps)
+        │   ├── e.g., Spring Boot App
+        │   └── e.g., Database Sidecar
+        │
+        └── Shared resources (IP, storage, namespace)
